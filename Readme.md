@@ -10,7 +10,12 @@ Powershell - the modern version. `install-powershell.bat` can help you get it if
 ## Recommended installatiom
 Place this directory/repo to your C:/ drive in a folder called "doublecmd", such that the full path of this file is `C:/doublecmd/Readme.md`
 
-Doing this ensurea that you do not need to modify the scripts ptovided to account for the location of this folder.
+Doing this ensures that you do not need to modify the scripts provided to account for the location of this folder.
+
+Note - this will not work if you are using a portable installation. If that is the case, you must modify file paths accordingly in the scripts provided.
+
+If not "installing" this folder to the recommended location, you must also modify paths to these files in various places throughout these scripts and reg files.
+
 
 ## Double Commander as the default explorer on Windows
 Double click the included `doublecmd.reg` file. To revert back to explorer, double-click `explorer.reg`

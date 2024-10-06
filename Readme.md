@@ -2,7 +2,7 @@
 # Replace Windows Explorwr woth Double Commander
 This repo provides scripts enabling you to change the default file manager to one of your choice. It is pre-configured for Double Commander, however modifying it for another file manager would be fairly straightforward.
 
-Disclaimer: I have only tested this on my personal Windows 10 machine. I have little reason to believe it won't wprk for you, but beware and back up your registry before proceeding.
+Disclaimer: I have only tested this on my personal Windows 10 machine. I have little reason to believe it won't wprk for you, but beware and back up your registry before proceeding. Most of you won't. The smart ones will. I am not very smart.
 
 ## Recommended installatiom
 Place this directory/repo to your C:/ drive in a folder called "doublecmd", such that the full path of this file is `C:/doublecmd/Readme.md`
@@ -16,9 +16,12 @@ Note - this will not work if you are using a portable installation. If that is t
 
 
 ## Win + E hotkey
-Using [Powertoys Keyboard Manager](https://learn.microsoft.com/en-us/windows/powertoys/keyboard-manager), one could replace the functionality of the Win + E shortcut without mucking about in their registry and in a way that's easy to revert.
+### Method 1 - Registry
+Double click `doublecmd-hotkey.reg`
+To revert, double click `explorer-hotkey.reg`
 
-First you will need to update `doublecmdAsExplorer.bat` with the path of your DC installation and the path of this script directory
+### Method 2 - Powertoys
+Using [Powertoys Keyboard Manager](https://learn.microsoft.com/en-us/windows/powertoys/keyboard-manager), one could replace the functionality of the Win + E shortcut without mucking about in their registry and in a way that's easy to revert with a gui or just by ending its process.
 
 Create a new keyboard shortcut with the following settings:
 

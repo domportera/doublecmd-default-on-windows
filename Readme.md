@@ -1,8 +1,11 @@
 
-# Replace Windows Explorwr woth Double Commander
+# Replace Windows Explorer with Double Commander
 This repo provides scripts enabling you to change the default file manager to one of your choice. It is pre-configured for Double Commander, however modifying it for another file manager would be fairly straightforward.
 
-Disclaimer: I have only tested this on my personal Windows 10 machine. I have little reason to believe it won't wprk for you, but beware and back up your registry before proceeding. Most of you won't. The smart ones will. I am not very smart.
+Disclaimer: I have only tested this on my personal Windows 10 machine. I have little reason to believe it won't work for you, but beware and back up your registry before proceeding. Most of you won't. The smart ones will. I am not very smart.
+
+## Dependencies
+Powershell - the modern version. `install-powershell.bat` can help you get it if needed.
 
 ## Recommended installatiom
 Place this directory/repo to your C:/ drive in a folder called "doublecmd", such that the full path of this file is `C:/doublecmd/Readme.md`

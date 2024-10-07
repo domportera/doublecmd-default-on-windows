@@ -8,15 +8,24 @@
 #   Import-Module "$BringToFrontScript"
 # }
 
-$dir = "$env:LOCALAPPDATA/doublecmdscript"
-$logFilePath = $dir + "/log.log"
 
 function OpenLogFile() {
     # open log file in default app
-    Start-Process -FilePath $logFilePath
+    Start-Process -FilePath GetLogFilePath
+}
+
+function GetLogDir() {
+    return "$env:LOCALAPPDATA/doublecmdscript"
+}
+
+function GetLogFilePath() {
+    return "$env:LOCALAPPDATA/doublecmdscript/log.log"
 }
 
 function logmepls($loginfo, $first = $false) {
+
+    $dir = GetLogDir;
+    $logFilePath = GetLogFilePath;
     # ensure directory is created
     if (!(Test-Path $dir)) {
         New-Item -Path $dir -ItemType Directory -Force
@@ -33,7 +42,7 @@ function logmepls($loginfo, $first = $false) {
     else {
         Out-File -FilePath $logFilePath -InputObject $loginfo -Append
     }
-    Start-Sleep 0.1
+
     Write-Host $loginfo
 }
 
@@ -45,17 +54,6 @@ function BringProcessToFront($process) {
         logmepls "Process id is 0"
         OpenLogFile
         return;
-    }
-    $countTime = 0
-    while ($process.MainWindowHandle -eq 0) {
-        Start-Sleep 0.05
-        $countTime += 0.05
-        if ($countTime -gt 5) {
-            logmepls "Process window not found: $process"
-            OpenLogFile
-            return;
-        }
-        logmepls "Trying to get  window again: $process"
     }
 
     logmepls "Confirmed window exists"
@@ -71,7 +69,7 @@ function BringProcessToFront($process) {
 }
 
 function GetProcess($process_name) {
-    $processes = Get-Process -Name "*${process_name}*"
+    $processes = Get-Process -Name "${process_name}"
     return $processes | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1
 }
 
@@ -84,9 +82,7 @@ function BringToFrontOrLaunch {
     )
 
     # print working directory
-    logmepls "Working directory: $pwd" $true
-
-    logmepls "Beginning process launch: $process_name $process_path $argies"
+    logmepls "Beginning process launch: wd: $pwd | name: $process_name | path: $process_path | args: $argies"
 
     # check process path exists
     if (![System.IO.File]::Exists($process_path)) {

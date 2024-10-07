@@ -9,8 +9,7 @@
 # }
 
 function BringProcessToFront($process) {
-    if ($process) {
-
+        # [console]::beep(500,300)
         $countTime = 0
         while ($process.MainWindowHandle -eq 0) {
             Start-Sleep 0.05
@@ -22,11 +21,10 @@ function BringProcessToFront($process) {
         
         Add-Type -AssemblyName Microsoft.VisualBasic
         [Microsoft.VisualBasic.Interaction]::AppActivate($process.Id)
-        Start-Sleep 0.05
+        Start-Sleep 0.1
         # For some reason the sleep here is very important or the window will not 
         # be focused (or will be less reliable). You could experiment with its
         # value if you need to perform work after calling this function.
-    }
 }
 
 function GetProcess($process_name) {

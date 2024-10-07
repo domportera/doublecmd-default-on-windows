@@ -1,1 +1,1 @@
-pwsh -NoProfile -wd "C:/doublecmd" -Command "& { Import-Module './BringToFront.ps1' && BringToFrontOrLaunch doublecmd 'C:/Program Files/Double Commander/doublecmd' -C }"
+pwsh -NoProfile -wd "C:/doublecmd" -Command "& { Import-Module 'C:/doublecmd/BringToFront.ps1' && BringToFrontOrLaunch 'doublecmd' 'C:/Program Files/Double Commander/doublecmd.exe' -C }"

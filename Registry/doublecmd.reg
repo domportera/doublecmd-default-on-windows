@@ -4,12 +4,12 @@ Windows Registry Editor Version 5.00
 @="open"
 
 [HKEY_CLASSES_ROOT\Drive\shell\open\command]
-@=start 'C:\\Program Files\\Double Commander\\doublecmd.exe' '-C -P L -T "%1"'
+@="C:\\Program Files\\Double Commander\\doublecmd.exe -C -P L -T \"%1\""
 ; @='wscript "c:\\doublecmd\\invisible.vbs" "c:\\doublecmd\\doublecmdAsExplorer.bat" "-C -P L -T \"%1\""'
 
 [HKEY_CLASSES_ROOT\Directory\shell]
 @="open"
 
 [HKEY_CLASSES_ROOT\Directory\shell\open\command]
-@=start 'C:\\Program Files\\Double Commander\\doublecmd.exe' '-C -P L -T "%1"'
+@="C:\\Program Files\\Double Commander\\doublecmd.exe -C -P L -T \"%1\""
 ; @='wscript "c:\\doublecmd\\invisible.vbs" "c:\\doublecmd\\doublecmdAsExplorer.bat" "-C -P L -T \"%1\""'

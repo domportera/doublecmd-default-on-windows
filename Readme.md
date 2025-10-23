@@ -5,7 +5,8 @@ This repo provides scripts enabling you to change the default file manager to on
 Disclaimer: I have only tested this on my personal Windows 10 machine. I have little reason to believe it won't work for you, but beware and back up your registry before proceeding. Most of you won't. The smart ones will. I am not very smart.
 
 ## Dependencies
-Powershell - the modern version. `install-powershell.bat` can help you get it if needed.
+Powershell - the modern version. `install-powershell.bat` can help you get it if needed. 
+The scripts that rely on powershell exist to prevent unnecessary Terminal windows from showing up when launching the application in certain contexts, and for bringing the existing process to the front when it's already opened. The latter may have mixed results, but I did my best.
 
 ## Recommended installatiom
 Place this directory/repo to your C:/ drive in a folder called "doublecmd", such that the full path of this file is `C:/doublecmd/Readme.md`

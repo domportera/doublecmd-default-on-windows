@@ -47,25 +47,77 @@ function logmepls($loginfo, $first = $false) {
 }
 
 function BringProcessToFront($process) {
-
     $windowPid = $process.Id
     logmepls "Process id: $windowPid"
     if ($windowPid -eq 0) {
         logmepls "Process id is 0"
         OpenLogFile
-        return;
+        return $false
     }
 
-    logmepls "Confirmed window exists"
+    logmepls "Confirmed window exists - Bringing process to front: $($process.ProcessName)"
+    
+    # Method 1: Using Microsoft.VisualBasic (simpler but less reliable)
+    try {
+        Add-Type -AssemblyName Microsoft.VisualBasic
+        $activated = [Microsoft.VisualBasic.Interaction]::AppActivate($windowPid)
+        Start-Sleep 0.1
         
-    logmepls "Bringing process to front: $process"
-    Add-Type -AssemblyName Microsoft.VisualBasic
-    [Microsoft.VisualBasic.Interaction]::AppActivate($windowPid)
-    Start-Sleep 0.1
-    logmepls "Success?"
-    # For some reason the sleep here is very important or the window will not 
-    # be focused (or will be less reliable). You could experiment with its
-    # value if you need to perform work after calling this function.
+        logmepls "Success?"
+        # For some reason the sleep here is very important or the window will not 
+        # be focused (or will be less reliable). You could experiment with its
+        # value if you need to perform work after calling this function.
+        if ($activated) {
+            logmepls "Successfully activated window using AppActivate"
+            return $true
+        }
+    }
+    catch {
+        logmepls "AppActivate failed: $($_.Exception.Message)"
+    }
+
+    # Method 2: Using Win32 API (more complex but more reliable)
+    try {
+        Add-Type @"
+            using System;
+            using System.Runtime.InteropServices;
+            public class Win32Api {
+                [DllImport("user32.dll")]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool SetForegroundWindow(IntPtr hWnd);
+                
+                [DllImport("user32.dll")]
+                public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+                
+                [DllImport("user32.dll")]
+                public static extern bool IsIconic(IntPtr hWnd);
+            }
+"@
+
+        $hWnd = $process.MainWindowHandle
+        if ($hWnd -ne [IntPtr]::Zero) {
+            # restore if minimized
+            if ([Win32Api]::IsIconic($hWnd)) {
+                [Win32Api]::ShowWindow($hWnd, 9) # SW_RESTORE = 9
+                Start-Sleep -Milliseconds 50
+            }
+            
+            # bring to front
+            $result = [Win32Api]::SetForegroundWindow($hWnd)
+            logmepls "SetForegroundWindow result: $result"
+            
+            if ($result) {
+                logmepls "Successfully brought window to front using Win32 API"
+                return $true
+            }
+        }
+    }
+    catch {
+        logmepls "Win32 API method failed: $($_.Exception.Message)"
+    }
+
+    logmepls "All methods failed to bring window to front"
+    return $false
 }
 
 function GetProcess($process_name) {
@@ -77,8 +129,8 @@ function BringToFrontOrLaunch {
     param(
         [Parameter(Mandatory = $True, Position = 0)][string]$process_name,
         [Parameter(Mandatory = $True, Position = 1)][string]$process_path,
-        [Parameter(Mandatory = $True, ValueFromRemainingArguments = $true, Position = 2)][string[]]
-        $argies
+        [Parameter(Mandatory = $False, ValueFromRemainingArguments = $true, Position = 2)][string[]] # mandatory false to allow no args
+        $argies = @() # default to empty array if no args provided
     )
 
     # print working directory
@@ -91,10 +143,18 @@ function BringToFrontOrLaunch {
         OpenLogFile
         return;
     }
- 
     $process = GetProcess $process_name
     if ($null -eq $process) {
-        Start-Process -FilePath $process_path $argies
+        # process not running, launch it
+        if ($argies.Count -gt 0) {
+            # launch process with arguments
+            logmepls "Launching process with args: $process_name $argies"
+            Start-Process -FilePath $process_path -ArgumentList $argies
+        }
+        else {
+            # launch process without arguments
+            Start-Process -FilePath $process_path
+        }
         $process = GetProcess $process_name
 
         while ($null -eq $process) {
